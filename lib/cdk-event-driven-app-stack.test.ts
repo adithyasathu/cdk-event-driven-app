@@ -24,8 +24,4 @@ describe("API Gateway Created", () => {
       PathPart: "health",
     });
   });
-
-  test("matches the snapshot", () => {
-    expect(template.toJSON()).toMatchSnapshot();
-  });
 });

@@ -1,14 +1,10 @@
-
 /* eslint-disable no-duplicate-imports */
-import type { StackProps} from "aws-cdk-lib";
+import type { StackProps } from "aws-cdk-lib";
 import { Stack, CfnOutput } from "aws-cdk-lib";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 
 import type { Construct } from "constructs";
-import {
-  RestApi,
-  LambdaIntegration,
-} from "aws-cdk-lib/aws-apigateway";
+import { RestApi, LambdaIntegration } from "aws-cdk-lib/aws-apigateway";
 import { Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
