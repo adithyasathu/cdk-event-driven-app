@@ -1,0 +1,46 @@
+---
+name: Pull request pipeline.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  NODE_VERSION: 20
+
+jobs:
+  scans:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: trivy.yaml
+
+  node-and-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Prettier check
+        run: npm run prettier:check
+
+      - name: Check linting
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test

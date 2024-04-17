@@ -1,0 +1,10 @@
+severity:
+  - UNKNOWN
+  - HIGH
+  - CRITICAL
+exit-code: 1
+scan:
+  scanners:
+    - vuln
+    - secret
+    - license
