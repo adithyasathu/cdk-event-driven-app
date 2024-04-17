@@ -74,7 +74,7 @@ exports[`API Gateway Created matches the snapshot 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "eb0b2e9e25bc1d48b0ab861f369d7848939d1604833e1c534358ebc2069ef3df.zip",
+          "S3Key": "f230c688f6ee85cffc8978f3aaca73a8562d7010394d74de3d428e553f5c7fc0.zip",
         },
         "Environment": {
           "Variables": {

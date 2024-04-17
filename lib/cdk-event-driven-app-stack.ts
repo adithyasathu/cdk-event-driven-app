@@ -1,4 +1,7 @@
-import type { StackProps, Stack, CfnOutput } from "aws-cdk-lib";
+
+/* eslint-disable no-duplicate-imports */
+import type { StackProps} from "aws-cdk-lib";
+import { Stack, CfnOutput } from "aws-cdk-lib";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 
 import type { Construct } from "constructs";
