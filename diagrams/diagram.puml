@@ -1,0 +1,21 @@
+@startuml
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v11.1/dist
+!includeurl AWSPuml/AWSCommon.puml
+!includeurl AWSPuml/General/User.puml
+!includeurl AWSPuml/NetworkingContentDelivery/CloudFront.puml
+!includeurl AWSPuml/NetworkingContentDelivery/ElasticLoadBalancingApplicationLoadBalancer.puml
+!includeurl AWSPuml/ApplicationIntegration/APIGateway.puml
+!includeurl AWSPuml/Compute/EC2.puml
+!includeurl AWSPuml/Compute/Lambda.puml
+
+left to right direction
+
+User(userRequest, "Resource Request", "User requesting services from Platform-X")
+APIGateway(platformXGateway, "Platform-X API resources", "API resources")
+Lambda(healthLambda, "Health Lambda", "returns 200")
+
+userRequest --> platformXGateway
+platformXGateway --> healthLambda
+healthLambda --> platformXGateway
+platformXGateway --> userRequest
+@enduml
