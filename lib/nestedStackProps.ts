@@ -1,8 +1,8 @@
 import type { StackProps } from "aws-cdk-lib";
-import type { RestApiAttributes } from "aws-cdk-lib/aws-apigateway";
 import type { lambdaFnProps } from "./lambdaFnProps";
+import type { ApiGatewayProps } from "./apiGatewayProps";
 
 export interface NestedStackProps extends StackProps {
-  apiGw: RestApiAttributes & { url: string };
+  apiGw: ApiGatewayProps;
   lambdaFnProps: lambdaFnProps;
 }
