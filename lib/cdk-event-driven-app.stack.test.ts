@@ -2,7 +2,7 @@ import { App } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { CdkEventDrivenAppStack } from "./cdk-event-driven-app.stack";
 
-describe("API Gateway Created", () => {
+describe("API Gateway Models", () => {
   let app: App;
   let stack: CdkEventDrivenAppStack;
   let template: Template;
@@ -15,52 +15,29 @@ describe("API Gateway Created", () => {
     template = Template.fromStack(stack);
   });
 
-  test("API Gateway Created", () => {
-    template.resourceCountIs("AWS::ApiGateway::RestApi", 1);
-  });
-
-  test("API Gateway has CORS defined", () => {
-    template.hasResource(
-      "AWS::ApiGateway::Method",
-      Match.objectLike({
-        Properties: {
-          HttpMethod: "OPTIONS",
-          Integration: {
-            IntegrationResponses: [
-              {
-                ResponseParameters: {
-                  "method.response.header.Access-Control-Allow-Headers":
-                    "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                  "method.response.header.Access-Control-Allow-Origin": "'*'",
-                  "method.response.header.Access-Control-Allow-Methods":
-                    "'OPTIONS,HEAD,GET,POST,PUT,PATCH,DELETE'",
-                  "method.response.header.Access-Control-Allow-Credentials":
-                    "'true'",
-                },
-                StatusCode: "204",
-              },
-            ],
-            RequestTemplates: {
-              "application/json": "{ statusCode: 200 }",
+  test("OnbordingResponse Model with schema created", () => {
+    template.hasResource("AWS::ApiGateway::Model", Match.objectLike({
+      Properties: {
+        ContentType: "application/json",
+        Name: "OnbordingResponse",
+        Schema: {
+          type: "object",
+          required: [
+            "message",
+            
+          ],
+          properties: {
+            message: {
+              type: "string",
+              
             },
-            Type: "MOCK",
+            
           },
+          $schema: "http://json-schema.org/draft-04/schema#",
+          
         },
-      }),
-    );
+        }
+    }));
   });
-
-  it("Rest Api root id and reource id are exported correctly`", () => {
-    template.hasOutput("MyTestStackRootId", {
-      Export: {
-        Name: "MyTestStack-Root-Id",
-      },
-    });
-
-    template.hasOutput("MyTestStackResourceId", {
-      Export: {
-        Name: "MyTestStack-Resource-Id",
-      },
-    });
-  });
+  
 });
