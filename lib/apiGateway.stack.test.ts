@@ -19,7 +19,6 @@ describe("ApiGatewayStack", () => {
     expect(apiGatewayStack.gw).toBeInstanceOf(ApiGatewayConstruct);
   });
 
-  
   test("API Gateway Created", () => {
     template.resourceCountIs("AWS::ApiGateway::RestApi", 1);
   });
@@ -69,9 +68,9 @@ describe("ApiGatewayStack", () => {
     });
 
     template.hasOutput("PlatformXGwAPIurl", {
-        Export: {
-          Name: "Platform-X-Gw-API-url",
-        },
-      });
+      Export: {
+        Name: "Platform-X-Gw-API-url",
+      },
+    });
   });
 });

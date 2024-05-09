@@ -15,5 +15,4 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 Built so far
 
-
 ![diagram](https://github.com/adithyasathu/cdk-event-driven-app/assets/22003086/4b51e29f-b5e8-44f8-ae0a-0c18d24834f4)

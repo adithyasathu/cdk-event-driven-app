@@ -16,28 +16,24 @@ describe("API Gateway Models", () => {
   });
 
   test("OnbordingResponse Model with schema created", () => {
-    template.hasResource("AWS::ApiGateway::Model", Match.objectLike({
-      Properties: {
-        ContentType: "application/json",
-        Name: "OnbordingResponse",
-        Schema: {
-          type: "object",
-          required: [
-            "message",
-            
-          ],
-          properties: {
-            message: {
-              type: "string",
-              
+    template.hasResource(
+      "AWS::ApiGateway::Model",
+      Match.objectLike({
+        Properties: {
+          ContentType: "application/json",
+          Name: "OnbordingResponse",
+          Schema: {
+            type: "object",
+            required: ["message"],
+            properties: {
+              message: {
+                type: "string",
+              },
             },
-            
+            $schema: "http://json-schema.org/draft-04/schema#",
           },
-          $schema: "http://json-schema.org/draft-04/schema#",
-          
         },
-        }
-    }));
+      }),
+    );
   });
-  
 });
