@@ -1,13 +1,11 @@
-import { App } from "aws-cdk-lib";
+import { App, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { HealthStack } from "./health.stack";
-import { CdkEventDrivenAppStack } from "../../lib/cdk-event-driven-app.stack";
 import { Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
 describe("HealthStack", () => {
   let app: App;
-  let stack: CdkEventDrivenAppStack;
   let healthStack: HealthStack;
   let template: Template;
 
@@ -25,12 +23,12 @@ describe("HealthStack", () => {
         minify: true,
       },
     };
-    stack = new CdkEventDrivenAppStack(app, "MyTestStack");
-    healthStack = new HealthStack(stack, "HealthStack", {
+    const testStack = new Stack(app, "MyTestStack");
+    healthStack = new HealthStack(testStack, "HealthStack", {
       apiGw: {
         restApiId: "dummyrestApiId",
         rootResourceId: "dummyrootResourceId",
-        url: "dummyurl",
+        baseUrl: "dummyurl/",
       },
       lambdaFnProps,
     });
@@ -79,7 +77,7 @@ describe("HealthStack", () => {
 
   it("Health API URL is outputed correctly`", () => {
     template.hasOutput("HealthApiUrl", {
-      Value: "dummyurlhealth",
+      Value: "dummyurl/health",
     });
   });
 });

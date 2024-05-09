@@ -37,7 +37,7 @@ export class HealthStack extends Stack {
     });
 
     new CfnOutput(this, "HealthApiUrl", {
-      value: `${props.apiGw.url}health`,
+      value: `${props.apiGw.baseUrl}health`,
       description: "The health api URL",
     });
   }

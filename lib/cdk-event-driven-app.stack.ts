@@ -3,11 +3,12 @@ import type { StackProps } from "aws-cdk-lib";
 import { Stack } from "aws-cdk-lib";
 
 import type { Construct } from "constructs";
-import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
+
+import { ApiGatewayStack } from "./apiGateway.stack";
+
 import { HealthStack } from "../src/health/health.stack";
-import { CfnOutput } from "aws-cdk-lib";
 
 export class CdkEventDrivenAppStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -34,55 +35,15 @@ export class CdkEventDrivenAppStack extends Stack {
       bundling: esBuildSettings,
     };
 
-    // Define a new API Gateway REST API resource
-    const api = new RestApi(this, `${id}-API`, {
-      restApiName: "API Gateway for the Platform X",
-      description: "This service provides backend APIs for Platform X",
-      deploy: true,
-      defaultCorsPreflightOptions: {
-        allowMethods: [
-          "OPTIONS",
-          "HEAD",
-          "GET",
-          "POST",
-          "PUT",
-          "PATCH",
-          "DELETE",
-        ],
-        allowCredentials: true,
-        allowOrigins: ["*"],
-      },
-    });
-
-    api.root.addMethod("ANY");
-
-    const restApiId = new CfnOutput(this, `${id}-Root-Id`, {
-      value: api.restApiId,
-      description: `The API Gateway Root id of the ${id}`,
-      exportName: `${id}-Root-Id`,
-    }).importValue;
-
-    const rootResourceId = new CfnOutput(this, `${id}-Resource-Id`, {
-      value: api.root.resourceId,
-      description: `The API Gateway Root resource id of the ${id}`,
-      exportName: `${id}-Resource-Id`,
-    }).importValue;
-
-    const url = new CfnOutput(this, `${id}-API-url`, {
-      value: api.url,
-      description: `The API Gateway API url of the ${id}`,
-      exportName: `${id}-API-url`,
-    }).importValue;
+    const {
+      gw: { restApi, baseUrl, rootResourceId, restApiId },
+    } = new ApiGatewayStack(this, `${id}-Gw`);
 
     const healthStack = new HealthStack(this, "Health", {
-      apiGw: {
-        restApiId,
-        rootResourceId,
-        url,
-      },
+      apiGw: { baseUrl, rootResourceId, restApiId },
       lambdaFnProps,
     });
 
-    healthStack.node.addDependency(api);
+    healthStack.node.addDependency(restApi);
   }
 }

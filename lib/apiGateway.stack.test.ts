@@ -1,18 +1,22 @@
-import { App } from "aws-cdk-lib";
+import { App, Stack } from "aws-cdk-lib";
 import { Match, Template } from "aws-cdk-lib/assertions";
-import { CdkEventDrivenAppStack } from "./cdk-event-driven-app.stack";
+import { ApiGatewayStack } from "./apiGateway.stack";
+import { ApiGatewayConstruct } from "./constructs/apiGatewayConstruct";
 
-describe("API Gateway Created", () => {
+describe("ApiGatewayStack", () => {
   let app: App;
-  let stack: CdkEventDrivenAppStack;
+  let apiGatewayStack: ApiGatewayStack;
   let template: Template;
+
   beforeAll(() => {
     app = new App();
-    // WHEN
-    stack = new CdkEventDrivenAppStack(app, "MyTestStack");
-    // THEN
+    const testStack = new Stack(app, "MyTestStack");
+    apiGatewayStack = new ApiGatewayStack(testStack, "Platform-X-Gw");
+    template = Template.fromStack(apiGatewayStack);
+  });
 
-    template = Template.fromStack(stack);
+  it("ApiGatewayConstruct is defined", () => {
+    expect(apiGatewayStack.gw).toBeInstanceOf(ApiGatewayConstruct);
   });
 
   test("API Gateway Created", () => {
@@ -50,16 +54,22 @@ describe("API Gateway Created", () => {
     );
   });
 
-  it("Rest Api root id and reource id are exported correctly`", () => {
-    template.hasOutput("MyTestStackRootId", {
+  it("Rest Api root id, reource id and base url are exported correctly`", () => {
+    template.hasOutput("PlatformXGwRootId", {
       Export: {
-        Name: "MyTestStack-Root-Id",
+        Name: "Platform-X-Gw-Root-Id",
       },
     });
 
-    template.hasOutput("MyTestStackResourceId", {
+    template.hasOutput("PlatformXGwResourceId", {
       Export: {
-        Name: "MyTestStack-Resource-Id",
+        Name: "Platform-X-Gw-Resource-Id",
+      },
+    });
+
+    template.hasOutput("PlatformXGwAPIurl", {
+      Export: {
+        Name: "Platform-X-Gw-API-url",
       },
     });
   });
