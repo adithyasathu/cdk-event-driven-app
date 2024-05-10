@@ -9,6 +9,7 @@ import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { ApiGatewayStack } from "./apiGateway.stack";
 
 import { HealthStack } from "../src/health/health.stack";
+import { OnboardingStack } from "../src/onboarding/onboarding.stack";
 
 export class CdkEventDrivenAppStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -44,6 +45,12 @@ export class CdkEventDrivenAppStack extends Stack {
       lambdaFnProps,
     });
 
+    const onboardingStack = new OnboardingStack(this, "Onboarding", {
+      apiGw: { baseUrl, rootResourceId, restApiId },
+      lambdaFnProps,
+    });
+
     healthStack.node.addDependency(restApi);
+    onboardingStack.node.addDependency(restApi);
   }
 }
