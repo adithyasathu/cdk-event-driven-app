@@ -13,6 +13,5 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 - `cdk diff` compare deployed stack with current state
 - `cdk synth` emits the synthesized CloudFormation template
 
-Built so far
 
-![diagram](https://github.com/adithyasathu/cdk-event-driven-app/assets/22003086/4b51e29f-b5e8-44f8-ae0a-0c18d24834f4)
+![diagram](https://github.com/adithyasathu/cdk-event-driven-app/assets/22003086/4e0465d9-d759-45eb-af06-dfa7a1afb6aa)
