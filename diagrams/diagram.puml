@@ -1,21 +1,52 @@
 @startuml
-!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v11.1/dist
-!includeurl AWSPuml/AWSCommon.puml
-!includeurl AWSPuml/General/User.puml
-!includeurl AWSPuml/NetworkingContentDelivery/CloudFront.puml
-!includeurl AWSPuml/NetworkingContentDelivery/ElasticLoadBalancingApplicationLoadBalancer.puml
-!includeurl AWSPuml/ApplicationIntegration/APIGateway.puml
-!includeurl AWSPuml/Compute/EC2.puml
-!includeurl AWSPuml/Compute/Lambda.puml
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v18.0/dist
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/General/User.puml
+!include AWSPuml/NetworkingContentDelivery/CloudFront.puml
+!include AWSPuml/NetworkingContentDelivery/ElasticLoadBalancingApplicationLoadBalancer.puml
+!include AWSPuml/ApplicationIntegration/APIGateway.puml
+!include AWSPuml/Compute/EC2.puml
+!include AWSPuml/Compute/Lambda.puml
+!include AWSPuml/Database/DynamoDB.puml
+!include AWSPuml/ApplicationIntegration/EventBridge.puml
+!include AWSPuml/ApplicationIntegration/SimpleNotificationService.puml
+!include AWSPuml/General/Email.puml
+!include AWSPuml/General/Mobileclient.puml
 
 left to right direction
 
 User(userRequest, "Resource Request", "User requesting services from Platform-X")
 APIGateway(platformXGateway, "Platform-X API resources", "API resources")
 Lambda(healthLambda, "Health Lambda", "returns 200")
+Lambda(onboardingLambda, "Onboarding Lambda", "returns 201")
+DynamoDB(onboardDb, "Onbording Database", "one entry per user")
+EventBridge(evenBridge, "EventBridge", "rules configured")
+SimpleNotificationService(snsEmail, "Email Notification Service", "rule matches for email to be sent")
+Lambda(emailLambda, "Email Lambda", "sends email using EMAIL service")
+Email(email, "Email", "emailid is used from onbording request")
+
+SimpleNotificationService(snsSms, "SMS Notification Service", "rule matches for sms to be sent")
+Lambda(smsLambda, "SMS Lambda", "sends sms using SMS service")
+Mobileclient(sms, "SMS", "mobile number is used from onbording request")
+
 
 userRequest --> platformXGateway
-platformXGateway --> healthLambda
+
+platformXGateway --> healthLambda : GET
 healthLambda --> platformXGateway
+
+platformXGateway --> onboardingLambda: POST
+onboardingLambda --> platformXGateway
+onboardingLambda --> onboardDb
+onboardDb --> evenBridge
+
+evenBridge --> snsEmail
+snsEmail --> emailLambda
+emailLambda --> email
+
+evenBridge --> snsSms
+snsSms --> smsLambda
+smsLambda --> sms
+
 platformXGateway --> userRequest
 @enduml
